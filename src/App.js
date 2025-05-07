@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Courses from './pages/Courses';
@@ -14,24 +14,21 @@ import AdminSidebar from './components/AdminSidebar';
 import CourseInfo from './pages/CourseInfo';
 
 function App() {
-  // State to track login status
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('user') ? true : false);
 
-  // Handle login/logout
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('user'); // Or any other action to log out
+    localStorage.removeItem('user');
   };
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-    <Router>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <div className="flex">
         <Routes>
           <Route path="/admin/*" element={<AdminSidebar />} />
         </Routes>
-        
+
         <div className="flex-grow mt-4 p-4">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -39,19 +36,16 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/reactjs" element={<CourseInfo />} />
-            {/* Admin Routes */}
             <Route path="/admin" element={<PrivateRoute />}>
-              <Route path="" element={<Dashboard />} />
+              <Route index element={<Dashboard />} />
               <Route path="coursemanager" element={<CourseManager />} />
               <Route path="usermanager" element={<UserManager />} />
             </Route>
-
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </div>
       </div>
       <Footer />
-    </Router>
     </BrowserRouter>
   );
 }
