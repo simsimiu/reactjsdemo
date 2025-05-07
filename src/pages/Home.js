@@ -16,18 +16,31 @@ const Home = () => {
           </p>
         </section>
 
-        <section className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">⚛️ Giới thiệu khóa học ReactJS</h2>
-          <p className="text-gray-700 mb-2">
-            Khóa học <strong>ReactJS</strong> cung cấp kiến thức từ cơ bản đến nâng cao về xây dựng giao diện người dùng bằng thư viện React, bao gồm các khái niệm như JSX, component, props, state, hook, routing, và quản lý form.
-          </p>
-          <Link
-            to="/reactjs"
-            className="inline-block mt-2 text-blue-600 hover:underline font-medium"
-          >
-            ➜ Xem chi tiết khóa học
-          </Link>
-        </section>
+        <section className="mb-10 px-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              ⚛️ Giới thiệu khóa học ReactJS
+            </h2>
+            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+              Khóa học <strong>ReactJS</strong> cung cấp kiến thức từ cơ bản đến nâng cao về xây dựng giao diện người dùng bằng thư viện React, bao gồm các khái niệm như JSX, component, props, state, hook, routing, và quản lý form.
+            </p>
+            <div className="flex flex-col space-y-2">
+              <Link
+                to="/reactjs"
+                className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              >
+                ➜ Xem chi tiết khóa học
+              </Link>
+              <a
+                href="https://github.com/simsimiu/react/tree/master"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              >
+                ➜ Xem chi tiết thực hành trên GitHub
+              </a>
+            </div>
+          </section>
+
 
         <section>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">📝 Giới thiệu bài kiểm tra cuối khóa</h2>
