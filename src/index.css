@@ -14,3 +14,17 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.content-editor-wrapper {
+  max-height: 200px;       /* Điều chỉnh chiều cao tối đa mà bạn muốn */
+  overflow-y: auto;        /* Bật thanh cuộn dọc nếu nội dung vượt quá chiều cao */
+}
+
+.react-quill-editor .ql-container {
+  height: 100% !important;  /* Đảm bảo chiều cao của editor sẽ chiếm toàn bộ không gian của container */
+}
+
+.react-quill-editor .ql-editor {
+  min-height: 100px;       /* Đảm bảo editor có chiều cao tối thiểu */
+}

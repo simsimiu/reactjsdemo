@@ -1,6 +1,47 @@
 import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { fetchChapters, addChapter, updateChapter, deleteChapter } from '../../api/api';
 import ReactPaginate from 'react-paginate';
+
+
+const ModalConfirmDelete = ({ show, onClose, onDelete, courseTitle }) => {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-lg w-1/3 p-6">
+        <div className="flex justify-between items-center border-b pb-4 mb-4">
+          <h2 className="text-2xl font-semibold">Xác nhận xóa khóa học</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <p className="text-sm text-gray-700 mb-4">Bạn chắc chắn muốn xóa khóa học <strong>{courseTitle}</strong>?</p>
+
+        <div className="mt-6 flex justify-end space-x-4">
+          <button
+            onClick={onClose}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={onDelete}
+            className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700"
+          >
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 const Modal = ({ show, onClose, onSubmit, form, errors, setForm }) => {
   if (!show) return null;
 
@@ -30,7 +71,7 @@ const Modal = ({ show, onClose, onSubmit, form, errors, setForm }) => {
             {errors.title && <p className="text-red-500 text-xs">{errors.title}</p>}
           </div>
 
-          <div>
+          {/* <div>
             <label htmlFor="content" className="block text-sm font-medium text-gray-700">Nội dung</label>
             <textarea
               id="content"
@@ -40,7 +81,20 @@ const Modal = ({ show, onClose, onSubmit, form, errors, setForm }) => {
               onChange={(e) => setForm({ ...form, content: e.target.value })}
             ></textarea>
             {errors.content && <p className="text-red-500 text-xs">{errors.content}</p>}
+          </div> */}
+       <div>
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700">Nội dung</label>
+          <div className="content-editor-wrapper">
+            <ReactQuill
+              value={form.content}
+              onChange={(value) => setForm({ ...form, content: value })}
+              className="react-quill-editor"
+            />
           </div>
+          {errors.content && <p className="text-red-500 text-xs">{errors.content}</p>}
+        </div>
+
+
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">Mô tả</label>
@@ -81,6 +135,8 @@ const CourseManager = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
+  const [courseToDelete, setCourseToDelete] = useState(null); // Add this line
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false); // Add this line
 
   const load = async () => {
     try {
@@ -123,9 +179,17 @@ const CourseManager = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
-    await deleteChapter(id);
-    load();
+  const handleDeleteClick = (course) => {
+    setCourseToDelete(course); // Store the course to be deleted
+    setShowConfirmDeleteModal(true); // Show confirmation modal
+  };
+
+  const handleDelete = async () => {
+    if (courseToDelete) {
+      await deleteChapter(courseToDelete.id);
+      load();
+      setShowConfirmDeleteModal(false); // Close modal after delete
+    }
   };
 
   const handlePageChange = ({ selected }) => {
@@ -175,7 +239,7 @@ const CourseManager = () => {
                     Sửa
                   </button>
                   <button
-                    onClick={() => handleDelete(course.id)}
+                    onClick={() => handleDeleteClick(course)} // Trigger delete confirmation modal
                     className="text-sm text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
                   >
                     Xóa
@@ -218,6 +282,13 @@ const CourseManager = () => {
         errors={errors}
         setForm={setForm}
       />
+      <ModalConfirmDelete
+        show={showConfirmDeleteModal}  // Add state for showing confirmation modal
+        onClose={() => setShowConfirmDeleteModal(false)}
+        onDelete={handleDelete}
+        courseTitle={courseToDelete ? courseToDelete.title : ''}
+      />
+
     </div>
   );
 };
