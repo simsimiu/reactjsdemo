@@ -24,6 +24,7 @@ function App() {
   };
 
   return (
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Router>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <div className="flex">
@@ -51,6 +52,7 @@ function App() {
       </div>
       <Footer />
     </Router>
+    </BrowserRouter>
   );
 }
 
